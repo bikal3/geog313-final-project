@@ -19,7 +19,7 @@ It's recommended to pull the Docker image from Dockerhub.
 docker pull bikal3/burn_image
 ```
 
-Otherwise, if you prefer, you can build your own image go to folder assignment-5
+Otherwise, if you prefer, you can build your own image go to folder geog313-final-project
 
 ```bash
 docker build -t bikal3/burn_image .
@@ -27,10 +27,10 @@ docker build -t bikal3/burn_image .
 
 ### 2. Run the Docker Container
 
-Go to folder assignment-7 and run the container using the following command:
+Go to folder geog313-final-project and run the container using the following command:
 
 ```bash
-docker run -p 8888:8888 -p 8787:8787 -v $(pwd):/home/jupyteruser --name assignment-7-container bikal3/bikal3/burn_image
+docker run -p 8888:8888 -p 8787:8787 -v $(pwd):/home/jupyteruser --name burn_container bikal3/burn_image
 ```
 
 Port `8787` is used by Dask Dashboard.
@@ -41,7 +41,7 @@ Once the container is running, JupyterLab will start and an access token will be
 
 ### 4. Open the Notebook
 
-After logging into JupyterLab, you should see the `main.ipynb` notebook in the directory. Click to open it, and you can start running the code.
+After logging into JupyterLab, you should see the file name with ipynb extention notebook in the directory. Click to open it, and you can start running the code.
 
 ### Stopping the Container
 

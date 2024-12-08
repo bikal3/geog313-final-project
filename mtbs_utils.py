@@ -140,8 +140,6 @@ def display_mtbs_by_event_id(event_id):
     Parameters:
     - event_id (str): The Event ID to filter the dataset by.
     """
-    # Initialize GEE
-    initialize_gee()
 
     # Load the MTBS burned area boundaries dataset
     dataset = ee.FeatureCollection('USFS/GTAC/MTBS/burned_area_boundaries/v1')
@@ -225,7 +223,7 @@ def get_mtbs_time_series_by_Ig_date(bbox, start_date, end_date):
     end_Ig_date = date_to_unix(end_date)
     # Load the MTBS burned area boundaries dataset
     mtbs = ee.FeatureCollection('USFS/GTAC/MTBS/burned_area_boundaries/v1')
-   # Define the area of interest (Example: California)
+    # Define the area of interest (Example: California)
     aoi = ee.Geometry.Rectangle(bbox) 
     
     # Filter the dataset by AOI and Ig_Date range

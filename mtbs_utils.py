@@ -2,6 +2,7 @@ import ee
 import geemap
 import pandas as pd
 from datetime import datetime
+import matplotlib.pyplot as plt
 #-------------------------------------------------------------------------------------------------------------------
 def initialize_gee():
     """
@@ -259,4 +260,93 @@ def get_mtbs_time_series_by_Ig_date(bbox, start_date, end_date):
     return df
 
 #-------------------------------------------------------------------------------------------------------------------
+def get_season(month):
+    """Returns the season for a given month."""
+    if month in [12, 1, 2]:
+        return 'Winter'
+    elif month in [3, 4, 5]:
+        return 'Spring'
+    elif month in [6, 7, 8]:
+        return 'Summer'
+    else:
+        return 'Autumn'
+#-------------------------------------------------------------------------------------------------------------------
+# Function to plot BurnBndAc by seasonality
+def plot_burned_area_by_season(df):
+    if df.empty:
+        print("No data available to plot.")
+        return
 
+    # Add Year and Season columns
+    df['Year'] = df['Date'].dt.year
+    df['Season'] = df['Date'].dt.month.apply(get_season)
+
+    # Group by Year and Season and sum the burned area
+    season_summary = df.groupby(['Year', 'Season'])['BurnBndAc'].sum().reset_index()
+
+    # Pivot for easier plotting
+    pivot_df = season_summary.pivot(index='Year', columns='Season', values='BurnBndAc').fillna(0)
+
+    # Plot the data
+    pivot_df.plot(kind='bar', stacked=True, figsize=(12, 7))
+    plt.title('Burned Area (BurnBndAc) by Season')
+    plt.xlabel('Year')
+    plt.ylabel('Burned Area (Acres)')
+    plt.legend(title='Season')
+    plt.tight_layout()
+    plt.show()
+#-------------------------------------------------------------------------------------------------------------------
+# Function to plot BurnBndAc by seasonality with side-by-side bars
+def plot_burned_area_by_season_side(df):
+    if df.empty:
+        print("No data available to plot.")
+        return
+
+    # Add Year and Season columns
+    df['Year'] = df['Date'].dt.year
+    df['Season'] = df['Date'].dt.month.apply(get_season)
+
+    # Group by Year and Season and sum the burned area
+    season_summary = df.groupby(['Year', 'Season'])['BurnBndAc'].sum().reset_index()
+
+    # Pivot for easier plotting
+    pivot_df = season_summary.pivot(index='Year', columns='Season', values='BurnBndAc').fillna(0)
+
+    # Plot side-by-side bars
+    pivot_df.plot(kind='bar', figsize=(12, 7), width=0.8)
+    plt.title('Burned Area (BurnBndAc) by Season')
+    plt.xlabel('Year')
+    plt.ylabel('Burned Area (Acres)')
+    plt.legend(title='Season')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()
+#-------------------------------------------------------------------------------------------------------------------
+# Function to plot BurnBndHa_1000 by seasonality with side-by-side bars
+def plot_burned_area_by_season_hectars(df):
+    if df.empty:
+        print("No data available to plot.")
+        return
+    # Convert BurnBndAc from acres to hectares and then to ha/1000
+    df['BurnBndHa'] = (df['BurnBndAc'] * 0.404686) / 1000
+    df.rename(columns={'BurnBndHa': 'BurnBndHa_1000'}, inplace=True)
+
+    # Add Year and Season columns
+    df['Year'] = df['Date'].dt.year
+    df['Season'] = df['Date'].dt.month.apply(get_season)
+
+    # Group by Year and Season and sum the burned area
+    season_summary = df.groupby(['Year', 'Season'])['BurnBndHa_1000'].sum().reset_index()
+
+    # Pivot for easier plotting
+    pivot_df = season_summary.pivot(index='Year', columns='Season', values='BurnBndHa_1000').fillna(0)
+
+    # Plot side-by-side bars
+    pivot_df.plot(kind='bar', figsize=(12, 7), width=0.8)
+    plt.title('Burned Area (ha/1000) by Season')
+    plt.xlabel('Year')
+    plt.ylabel('Burned Area (Thousands of Hectares)')
+    plt.legend(title='Season')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()

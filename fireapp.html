@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MTBS Polygons FeatureLayer</title>
+    <link
+        rel="stylesheet"
+        href="https://js.arcgis.com/4.27/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.27/"></script>
+    <style>
+        html,
+        body,
+        #viewDiv {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="viewDiv"></div>
+    <script>
+        require([
+            "esri/Map",
+            "esri/views/MapView",
+            "esri/layers/FeatureLayer"
+        ], function (Map, MapView, FeatureLayer) {
+            // Create a map with a basemap
+            const map = new Map({
+                basemap: "topo-vector"
+            });
+
+            // Add the MTBS Polygons feature layer
+            const featureLayer = new FeatureLayer({
+                url: "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/MTBS_Polygons_v1/FeatureServer"
+            });
+            map.add(featureLayer);
+
+            // Create a MapView
+            const view = new MapView({
+                container: "viewDiv",
+                map: map,
+                center: [-100, 40], // Approximate center for the US
+                zoom: 4
+            });
+
+            // Add a popup template to display feature info
+            featureLayer.popupTemplate = {
+                title: "MTBS Polygons",
+                content: `
+                    <b>Fire Name:</b> {Fire_Name}<br>
+                    <b>Year:</b> {Year}<br>
+                    <b>Acres Burned:</b> {BurnBndAc}<br>
+                `
+            };
+        });
+    </script>
+</body>
+</html>

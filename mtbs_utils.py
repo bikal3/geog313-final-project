@@ -3,6 +3,7 @@ import geemap
 import pandas as pd
 from datetime import datetime
 import matplotlib.pyplot as plt
+import calendar
 #-------------------------------------------------------------------------------------------------------------------
 def initialize_gee():
     """
@@ -16,6 +17,29 @@ def initialize_gee():
         ee.Authenticate()
         ee.Initialize()
         print("Google Earth Engine authenticated and initialized successfully.")
+#-------------------------------------------------------------------------------------------------------------------
+
+def get_month_start_end(event_date):
+    """
+    Given an event date, return the start date and end date of that month.
+
+    Parameters:
+    - event_date (str): Date string in 'YYYY-MM-DD HH:MM:SS' format.
+
+    Returns:
+    - tuple: (start_date, end_date) in 'YYYY-MM-DD' format.
+    """
+    # Convert event_date to a datetime object
+    event_date_dt = datetime.strptime(event_date, '%Y-%m-%d %H:%M:%S')
+    
+    # Get the first day of the month
+    start_date = event_date_dt.replace(day=1).strftime('%Y-%m-%d')
+    
+    # Get the last day of the month
+    last_day = calendar.monthrange(event_date_dt.year, event_date_dt.month)[1]
+    end_date = event_date_dt.replace(day=last_day).strftime('%Y-%m-%d')
+    
+    return start_date, end_date
 
 #-------------------------------------------------------------------------------------------------------------------
 def date_to_unix(date_str):
@@ -29,6 +53,19 @@ def date_to_unix(date_str):
     - int: Unix timestamp in milliseconds.
     """
     return int(datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S' ).timestamp() * 1000)
+
+#-------------------------------------------------------------------------------------------------------------------
+def unix_to_date(unix_timestamp):
+    """
+    Convert a Unix timestamp in milliseconds to a date string in 'YYYY-MM-DD HH:MM:SS' format.
+
+    Parameters:
+    - unix_timestamp (int): The Unix timestamp in milliseconds to convert.
+
+    Returns:
+    - str: Date string in 'YYYY-MM-DD HH:MM:SS' format.
+    """
+    return datetime.utcfromtimestamp(unix_timestamp / 1000).strftime('%Y-%m-%d %H:%M:%S')
 #-------------------------------------------------------------------------------------------------------------------
 def display_mtbs_burn_severity(start_date, end_date, bbox):
     """

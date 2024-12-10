@@ -6,4 +6,5 @@
 **/.ipython/
 **/.jupyter/
 **/.local/
+**/data/
 **/__pycache__/

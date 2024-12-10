@@ -28,7 +28,7 @@ def date_to_unix(date_str):
     Returns:
     - int: Unix timestamp in milliseconds.
     """
-    return int(datetime.strptime(date_str, '%Y-%m-%d').timestamp() * 1000)
+    return int(datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S' ).timestamp() * 1000)
 #-------------------------------------------------------------------------------------------------------------------
 def display_mtbs_burn_severity(start_date, end_date, bbox):
     """
@@ -96,9 +96,9 @@ def display_mtbs_boundaries(bbox, start_date,end_date):
     - start_date (str): The start date in 'YYYY-MM-DD' format (default is '2016-01-01').
     - end_date (str): The end date in 'YYYY-MM-DD' format (default is '2021-12-31').
     """
+    # Convert start_date and end_date to Unix timestamps in milliseconds
     start_Ig_date = date_to_unix(start_date)
     end_Ig_date = date_to_unix(end_date)
-
 
     # Load the MTBS burned area boundaries dataset
     mtbs_boundaries = ee.FeatureCollection('USFS/GTAC/MTBS/burned_area_boundaries/v1')
@@ -106,39 +106,13 @@ def display_mtbs_boundaries(bbox, start_date,end_date):
     # Define the AOI using the provided bbox
     aoi = ee.Geometry.Rectangle(bbox)
 
-    # Filter the dataset by AOI and Ig_Date range
+    # # Filter the dataset by AOI
+    # mtbs_boundaries_filtered = mtbs_boundaries.filterBounds(aoi)
+
+        # Filter the dataset by AOI and Ig_Date range
     mtbs_boundaries_filtered = mtbs_boundaries.filterBounds(aoi).filter(
         ee.Filter.rangeContains('Ig_Date', start_Ig_date, end_Ig_date)
     )
-
-    # Extract features and properties to create GeoJSON
-    features = mtbs_boundaries_filtered.getInfo()['features']
-
-    # Create the GeoJSON structure
-    geojson = {
-        "type": "FeatureCollection",
-        "features": []
-    }
-
-    for feature in features:
-        geojson['features'].append({
-            "type": "Feature",
-            "geometry": feature['geometry'],
-            "properties": {
-                "Incid_Name ": feature['properties']['FireName'],
-                "Ig_Date": feature['properties']['BurnDate'],
-                "Event_ID": feature['properties']['EventID']
-            }
-        })
-
-
-    # Convert the GeoJSON to string format
-    geojson_data = json.dumps(geojson)
-
-    # Create a map centered on the AOI
-    center_lat = (bbox[1] + bbox[3]) / 2
-    center_lon = (bbox[0] + bbox[2]) / 2
-    map_ = geemap.Map(center=[center_lat, center_lon], zoom=6)
 
     # Visualization parameters
     vis_params = {
@@ -147,13 +121,19 @@ def display_mtbs_boundaries(bbox, start_date,end_date):
         'width': 1.0             # Outline width
     }
 
-    # Add the GeoJSON layer to the map with popups
-    map_.addLayer(mtbs_boundaries_filtered, vis_params, popup=["FireName", "BurnDate","EventID"], layer_name="geojson_data")
+    # Create a map centered on the AOI
+    center_lat = (bbox[1] + bbox[3]) / 2
+    center_lon = (bbox[0] + bbox[2]) / 2
+    map_ = geemap.Map(center=[center_lat, center_lon], zoom=6)
+
+    # Add the filtered burned area boundaries layer to the map
+    map_.addLayer(mtbs_boundaries_filtered, vis_params, f"MTBS Burned Area Boundaries ({start_date} to {end_date})")
 
     # Add the AOI boundary to the map for reference
     map_.addLayer(aoi, {'color': 'blue'}, 'AOI Boundary')
 
-    # Return the map object
+
+    # Display the map
     return map_
 #-------------------------------------------------------------------------------------------------------------------
 def display_mtbs_by_event_id(event_id):
@@ -372,3 +352,55 @@ def plot_burned_area_by_season_hectars(df):
     plt.xticks(rotation=45)
     plt.tight_layout()
     plt.show()
+#-------------------------------------------------------------------------------------------------------------------
+
+def display_mtbs_by_event_start_date(event_id):
+    """
+    Display the MTBS burned area boundary for a specific Event ID and Event Date.
+
+    Parameters:
+    - event_id (str): The Event ID to filter the dataset by.
+    - start_date (str): The Event Date to filter the dataset by (format: 'YYYY-MM-DD').
+    """
+
+    # Load the MTBS burned area boundaries dataset
+    dataset = ee.FeatureCollection('USFS/GTAC/MTBS/burned_area_boundaries/v1')
+    start_Ig_date = "1625209200000"
+    # Define the field names for filtering
+    field_event_id = 'Event_ID'      # Field name for Event ID
+    field_start_date = 'Ig_Date'  # Field name for Event Date (ensure this matches the dataset's field name)
+
+    # Filter the dataset by the specified Event ID and Event Date
+    filtered_feature = dataset.filter(
+        ee.Filter.Or(
+            ee.Filter.eq(field_event_id, event_id),
+            ee.Filter.eq(field_start_date, start_Ig_date)
+        )
+    )
+
+    # Check if the filtered dataset is empty
+    count = filtered_feature.size().getInfo()
+    if count == 0:
+        print(f"No feature found with {field_event_id}: {event_id} and {field_start_date}: {start_Ig_date}")
+        return None
+    else:
+        print(f"Displaying feature with {field_event_id}: {event_id} and {field_start_date}: {start_Ig_date}")
+
+    # Visualization parameters
+    vis_params = {
+        'fillColor': '#ff8a50',  # Fill color for the boundary
+        'color': '#ff5722',      # Outline color
+        'width': 2.0             # Outline width
+    }
+
+    # Create a map object
+    map_ = geemap.Map()
+
+    # Add the filtered feature to the map
+    map_.addLayer(filtered_feature, vis_params, f"{field_event_id}: {event_id}, {field_start_date}: {start_Ig_date}")
+
+    # Zoom to the feature if it exists
+    map_.centerObject(filtered_feature, zoom=10)
+
+    # Display the map
+    return map_

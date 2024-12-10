@@ -7,4 +7,6 @@
 **/.jupyter/
 **/.local/
 **/data/
+**/.cache.sqlite/
 **/__pycache__/
+

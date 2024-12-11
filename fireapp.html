@@ -1,62 +1,71 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>MTBS Polygons FeatureLayer</title>
-    <link
-        rel="stylesheet"
-        href="https://js.arcgis.com/4.27/esri/themes/light/main.css"
-    />
+    <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css" />
     <script src="https://js.arcgis.com/4.27/"></script>
     <style>
-        html,
-        body,
-        #viewDiv {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
+      html,
+      body,
+      #viewDiv {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div id="viewDiv"></div>
     <script>
-        require([
-            "esri/Map",
-            "esri/views/MapView",
-            "esri/layers/FeatureLayer"
-        ], function (Map, MapView, FeatureLayer) {
-            // Create a map with a basemap
-            const map = new Map({
-                basemap: "topo-vector"
-            });
-
-            // Add the MTBS Polygons feature layer
-            const featureLayer = new FeatureLayer({
-                url: "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/MTBS_Polygons_v1/FeatureServer"
-            });
-            map.add(featureLayer);
-
-            // Create a MapView
-            const view = new MapView({
-                container: "viewDiv",
-                map: map,
-                center: [-100, 40], // Approximate center for the US
-                zoom: 4
-            });
-
-            // Add a popup template to display feature info
-            featureLayer.popupTemplate = {
-                title: "MTBS Polygons",
-                content: `
-                <b>Fire Name:</b> {FireName}<br>
-                <b>StartDate:</b> {StartDate}<br>
-                <b>Acres Burned:</b> {Acres}<br>
-                <b>GlobalID:</b> {GlobalID}<br>
-                <b>OBJECTID:</b> {OBJECTID}<br>
-                `
-            };
+      require(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer"], function (Map, MapView, FeatureLayer) {
+        // Create a map with a basemap
+        const map = new Map({
+          basemap: "topo-vector",
         });
-    </script>
-</body>
-</html>
 
+        // Add the MTBS Polygons feature layer
+        const featureLayer = new FeatureLayer({
+          url: "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/MTBS_Polygons_v1/FeatureServer",
+        });
+        map.add(featureLayer);
+
+        // Create a MapView
+        const view = new MapView({
+          container: "viewDiv",
+          map: map,
+          center: [-100, 40], // Approximate center for the US
+          zoom: 4,
+        });
+
+        // Add a popup template to display feature info in a table format
+        featureLayer.popupTemplate = {
+          title: "MTBS Polygons",
+          content: `
+        <table style="width:100%; border-collapse: collapse;">
+            <tr>
+                <td style="border: 1px solid #ddd; padding: 8px;"><b>Fire Name</b></td>
+                <td style="border: 1px solid #ddd; padding: 8px;">{FireName}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #ddd; padding: 8px;"><b>Start Date</b></td>
+                <td style="border: 1px solid #ddd; padding: 8px;">{StartDate}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #ddd; padding: 8px;"><b>Acres Burned</b></td>
+                <td style="border: 1px solid #ddd; padding: 8px;">{Acres}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #ddd; padding: 8px;"><b>Global ID</b></td>
+                <td style="border: 1px solid #ddd; padding: 8px;">{GlobalID}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #ddd; padding: 8px;"><b>OBJECTID</b></td>
+                <td style="border: 1px solid #ddd; padding: 8px;">{OBJECTID}</td>
+            </tr>
+        </table>
+    `,
+        };
+      });
+    </script>
+  </body>
+</html>

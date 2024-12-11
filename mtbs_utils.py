@@ -42,7 +42,7 @@ def get_month_start_end(event_date):
     return start_date, end_date
 
 #-------------------------------------------------------------------------------------------------------------------
-def date_to_unix(date_str):
+def datetime_to_unix(date_str):
     """
     Convert a date string in 'YYYY-MM-DD' format to Unix timestamp in milliseconds.
 
@@ -53,6 +53,19 @@ def date_to_unix(date_str):
     - int: Unix timestamp in milliseconds.
     """
     return int(datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S' ).timestamp() * 1000)
+
+#-------------------------------------------------------------------------------------------------------------------
+def date_to_unix(date_str):
+    """
+    Convert a date string in 'YYYY-MM-DD' format to Unix timestamp in milliseconds.
+
+    Parameters:
+    - date_str (str): The date string to convert.
+
+    Returns:
+    - int: Unix timestamp in milliseconds.
+    """
+    return int(datetime.strptime(date_str, '%Y-%m-%d' ).timestamp() * 1000)
 
 #-------------------------------------------------------------------------------------------------------------------
 def unix_to_date(unix_timestamp):
@@ -245,6 +258,35 @@ def get_mtbs_properties(event_id):
         df = pd.DataFrame([properties])
 
         return df
+#-------------------------------------------------------------------------------------------------------------------
+def get_mtbs_properties_by_name(event_name):
+    """
+    Retrieve the properties of an MTBS burned area boundary feature based on Event ID.
+
+    Parameters:
+    - event_name (str): The Event ID to filter the dataset by.
+
+    Returns:
+    - pd.DataFrame: A DataFrame containing the feature's properties.
+    """
+    # Load the MTBS burned area boundaries dataset
+    dataset = ee.FeatureCollection('USFS/GTAC/MTBS/burned_area_boundaries/v1')
+
+    # Filter the dataset by the specified Event ID
+    filtered_feature = dataset.filter(ee.Filter.eq('Incid_Name', event_name)).first()
+
+    # Check if the feature exists
+    if filtered_feature is None:
+        print(f"No feature found with Incid_Name: {event_name}")
+        return None
+    else:
+        # Get the feature's properties
+        properties = filtered_feature.getInfo()['properties']
+
+        # Convert the properties dictionary to a DataFrame
+        df = pd.DataFrame([properties])
+
+        return df
 #-------------------------------------------------------------------------------------------------------------------    
 def get_mtbs_time_series_by_Ig_date(bbox, start_date, end_date):
     """
@@ -391,26 +433,26 @@ def plot_burned_area_by_season_hectars(df):
     plt.show()
 #-------------------------------------------------------------------------------------------------------------------
 
-def display_mtbs_by_event_start_date(event_id):
+def display_mtbs_by_event_start_date(event_name,start_date):
     """
     Display the MTBS burned area boundary for a specific Event ID and Event Date.
 
     Parameters:
-    - event_id (str): The Event ID to filter the dataset by.
+    - event_name (str): The Event ID to filter the dataset by.
     - start_date (str): The Event Date to filter the dataset by (format: 'YYYY-MM-DD').
     """
 
     # Load the MTBS burned area boundaries dataset
     dataset = ee.FeatureCollection('USFS/GTAC/MTBS/burned_area_boundaries/v1')
-    start_Ig_date = "1625209200000"
+    start_Ig_date = datetime_to_unix(start_date)
     # Define the field names for filtering
-    field_event_id = 'Event_ID'      # Field name for Event ID
+    field_event_name = 'Incid_Name'      # Field name for Event ID
     field_start_date = 'Ig_Date'  # Field name for Event Date (ensure this matches the dataset's field name)
 
     # Filter the dataset by the specified Event ID and Event Date
     filtered_feature = dataset.filter(
         ee.Filter.Or(
-            ee.Filter.eq(field_event_id, event_id),
+            ee.Filter.eq(field_event_name, event_name),
             ee.Filter.eq(field_start_date, start_Ig_date)
         )
     )
@@ -418,10 +460,10 @@ def display_mtbs_by_event_start_date(event_id):
     # Check if the filtered dataset is empty
     count = filtered_feature.size().getInfo()
     if count == 0:
-        print(f"No feature found with {field_event_id}: {event_id} and {field_start_date}: {start_Ig_date}")
+        print(f"No feature found with {field_event_name}: {event_name} and {field_start_date}: {start_Ig_date}")
         return None
     else:
-        print(f"Displaying feature with {field_event_id}: {event_id} and {field_start_date}: {start_Ig_date}")
+        print(f"Displaying feature with {field_event_name}: {event_name} and {field_start_date}: {start_Ig_date}")
 
     # Visualization parameters
     vis_params = {
@@ -434,7 +476,7 @@ def display_mtbs_by_event_start_date(event_id):
     map_ = geemap.Map()
 
     # Add the filtered feature to the map
-    map_.addLayer(filtered_feature, vis_params, f"{field_event_id}: {event_id}, {field_start_date}: {start_Ig_date}")
+    map_.addLayer(filtered_feature, vis_params, f"{field_event_name}: {event_name}, {field_start_date}: {start_Ig_date}")
 
     # Zoom to the feature if it exists
     map_.centerObject(filtered_feature, zoom=10)

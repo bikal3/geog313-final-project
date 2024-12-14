@@ -18,7 +18,6 @@ def initialize_gee():
         ee.Initialize()
         print("Google Earth Engine authenticated and initialized successfully.")
 #-------------------------------------------------------------------------------------------------------------------
-
 def get_month_start_end(event_date):
     """
     Given an event date, return the start date and end date of that month.
@@ -40,7 +39,6 @@ def get_month_start_end(event_date):
     end_date = event_date_dt.replace(day=last_day).strftime('%Y-%m-%d')
     
     return start_date, end_date
-
 #-------------------------------------------------------------------------------------------------------------------
 def datetime_to_unix(date_str):
     """

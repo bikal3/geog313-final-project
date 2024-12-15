@@ -91,11 +91,10 @@ docker rmi bikal3/burn_image
 
 ## File Structure: mtbs_utils 
 
-| *mtbs_utils.py*        |             Parameters                        |  Description 
-| ---------------------  | --------------------------------------------- | ------------------------
-| initialize_gee         | ee.Initialize()                               | Authenticate and initialize the Google Earth Engine API.
-| get_month_start_end    | Date string in 'YYYY-MM-DD HH:MM:SS' format.  | Given an event date, return the start date and end date of that month
-| datetime_to_unix       | Unix timestamp in milliseconds                | Convert a date string in 'YYYY-MM-DD' format to Unix timestamp in milliseconds
-| date_to_unix           | date_str (str): The date string to convert    | Convert a date string in 'YYYY-MM-DD' format to Unix timestamp in milliseconds
-| unix_to_date           | Unix timestamp in milliseconds                | Convert a Unix timestamp in milliseconds to a date string in 'YYYY-MM-DD HH:MM:SS' format.
-
+| mtbs_utils.py             |             Parameters                        |  Description 
+| ------------------------- | --------------------------------------------- | ------------------------
+| initialize_gee            | ee.Initialize()                               | Authenticate and initialize the Google Earth Engine API.
+| get_month_start_end       | Date string in 'YYYY-MM-DD HH:MM:SS' format.  | Given an event date, return the start date and end date of that month
+| datetime_to_unix          | Unix timestamp in milliseconds                | Convert a date string in 'YYYY-MM-DD' format to Unix timestamp in milliseconds
+|display_mtbs_burn_severity |start_date:'YYYY-MM-DD' format, end_date:'YYYY-MM-DD' format, bbox (list): Bounding box as [min_lon, min_lat, max_lon, max_lat]                                     | Display the MTBS burn severity map within a specified date range and bounding box
+| display_mtbs_boundaries   |start_date:'YYYY-MM-DD' format, end_date:'YYYY-MM-DD' format, bbox (list): Bounding box as [min_lon, min_lat, max_lon, max_lat]                                     | Display the MTBS burned area boundaries within a specified bounding box and date range

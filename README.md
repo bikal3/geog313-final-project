@@ -73,7 +73,7 @@ docker rmi bikal3/burn_image
 | src                    | Description
 | ---------------------  | --------------------------------------------- |
 | evi.api.ipynb          | Jupyter notebooks for EVI index analysis      |
-| fires_notebook         | Python scripts for processing MTBS data.      |
+| fires_notebook.ipynb   | Python scripts for processing MTBS data.      |
 | mtbs_example.ipynb     | Jupyter notebooks for MTBS data by bbox       |
 | mtbs_source_coop.ipynb | Python for MTBS data by country               |
 | openmeteo_example.ipynb| Jupyter notebooks for weather data            |
@@ -91,9 +91,11 @@ docker rmi bikal3/burn_image
 
 ## File Structure: mtbs_utils 
 
-| mtbs_utils.py          |             Parameters                        |  Description 
+| *mtbs_utils.py*        |             Parameters                        |  Description 
 | ---------------------  | --------------------------------------------- | ------------------------
-| initialize_gee         | Directory containing shapefiles and datasets. | Authenticate and initialize the Google Earth Engine API
+| initialize_gee         | ee.Initialize()                               | Authenticate and initialize the Google Earth Engine API.
 | get_month_start_end    | Date string in 'YYYY-MM-DD HH:MM:SS' format.  | Given an event date, return the start date and end date of that month
-| openmeteo_utils.py     | Python scripts for processing data.           |
-| source_coop_utils.py   | List of dependencies to install.              |
+| datetime_to_unix       | Unix timestamp in milliseconds                | Convert a date string in 'YYYY-MM-DD' format to Unix timestamp in milliseconds
+| date_to_unix           | date_str (str): The date string to convert    | Convert a date string in 'YYYY-MM-DD' format to Unix timestamp in milliseconds
+| unix_to_date           | Unix timestamp in milliseconds                | Convert a Unix timestamp in milliseconds to a date string in 'YYYY-MM-DD HH:MM:SS' format.
+

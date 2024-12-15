@@ -93,8 +93,17 @@ docker rmi bikal3/burn_image
 
 | mtbs_utils.py             |             Parameters                        |  Description 
 | ------------------------- | --------------------------------------------- | ------------------------
-| initialize_gee            | ee.Initialize()                               | Authenticate and initialize the Google Earth Engine API.
-| get_month_start_end       | Date string in 'YYYY-MM-DD HH:MM:SS' format.  | Given an event date, return the start date and end date of that month
-| datetime_to_unix          | Unix timestamp in milliseconds                | Convert a date string in 'YYYY-MM-DD' format to Unix timestamp in milliseconds
-|display_mtbs_burn_severity |start_date:'YYYY-MM-DD' format, end_date:'YYYY-MM-DD' format, bbox (list): Bounding box as [min_lon, min_lat, max_lon, max_lat]                                     | Display the MTBS burn severity map within a specified date range and bounding box
+| initialize_gee            | ee.Initialize()                               |Authenticate and initialize the Google Earth Engine API.
+| get_month_start_end       | Date string in 'YYYY-MM-DD HH:MM:SS' format.  |Given an event date, return the start date and end date of that month
+| datetime_to_unix          | Unix timestamp in milliseconds                |Convert a date string in 'YYYY-MM-DD' format to Unix timestamp in milliseconds
+|display_mtbs_burn_severity |start_date:'YYYY-MM-DD' format, end_date:'YYYY-MM-DD' format, bbox (list): Bounding box as [min_lon, min_lat, max_lon, max_lat]                                     |Display the MTBS burn severity map within a specified date range and bounding box
 | display_mtbs_boundaries   |start_date:'YYYY-MM-DD' format, end_date:'YYYY-MM-DD' format, bbox (list): Bounding box as [min_lon, min_lat, max_lon, max_lat]                                     | Display the MTBS burned area boundaries within a specified bounding box and date range
+|display_mtbs_by_event_id   | event ID                                      |Display the MTBS burned area boundary for a specific Event ID
+|get_mtbs_properties        | event ID                                      |Retrieve the properties of an MTBS burned area boundary feature based on Event ID.
+|get_mtbs_properties_by_name| event name                                    |Retrieve the properties of an MTBS burned area boundary feature based on event name 
+|get_mtbs_time_series_by_Ig_date | start date, end date, bounding box       |Perform a time series analysis on the MTBS burned area boundaries dataset using Ig_Date range
+|get_season                 |by month                                       |Retrieve season by specific months. Eg. eg. winter = 12,1,2, summer = 6,7,8, 
+|plot_burned_area_by_season | x=year and y=season                           |Function to plot BurnBndAcres by seasonality in stacked bars. 
+|plot_burnedareabyseasonside| x=year and y=season                           |Function to plot BurnBndAcres by seasonality with side-by-side bars. 
+|plot_burnedareabyseasonhect| x=year and y=season                           |Function to plot BurnBndHectares by seasonality with side-by-side bars
+|displaymtbsbyeventstartdate|The Event ID to filter the dataset             |Display the MTBS burned area boundary for a specific Event ID and Event Date

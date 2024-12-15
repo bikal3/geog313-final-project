@@ -67,3 +67,33 @@ To remove the container and image after you are done:
 docker rm burn_container
 docker rmi bikal3/burn_image
 ```
+
+## Folder Structure: SRC
+
+| src                    | Description
+| ---------------------  | --------------------------------------------- |
+| evi.api.ipynb          | Jupyter notebooks for EVI index analysis      |
+| fires_notebook         | Python scripts for processing MTBS data.      |
+| mtbs_example.ipynb     | Jupyter notebooks for MTBS data by bbox       |
+| mtbs_source_coop.ipynb | Python for MTBS data by country               |
+| openmeteo_example.ipynb| Jupyter notebooks for weather data            |
+
+
+## Folder Structure: utils 
+
+| utils                  | Description 
+| ---------------------  | --------------------------------------------- | 
+| evi_utils.py           | Directory containing shapefiles and datasets. |
+| mtbs_utils.py          | Jupyter notebooks for data analysis.          |
+| openmeteo_utils.py     | Python scripts for processing data.           |
+| source_coop_utils.py   | List of dependencies to install.              |
+
+
+## File Structure: mtbs_utils 
+
+| mtbs_utils.py          |             Parameters                        |  Description 
+| ---------------------  | --------------------------------------------- | ------------------------
+| initialize_gee         | Directory containing shapefiles and datasets. | Authenticate and initialize the Google Earth Engine API
+| get_month_start_end    | Date string in 'YYYY-MM-DD HH:MM:SS' format.  | Given an event date, return the start date and end date of that month
+| openmeteo_utils.py     | Python scripts for processing data.           |
+| source_coop_utils.py   | List of dependencies to install.              |

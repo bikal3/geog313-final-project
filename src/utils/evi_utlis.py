@@ -133,7 +133,7 @@ def landsat8_evi_event_id_custom_date(event_id, start_date, end_date, cloud_cove
     # Create a map object to visualize the result
     map_ = geemap.Map()
     map_.addLayer(filtered_feature, {'color': 'red'}, f"MTBS Boundary: {event_id}")
-    map_.addLayer(processed.median().clip(bbox), {'bands': ['evi'], 'min': 0, 'max': 1, 'palette': ['blue', 'green', 'yellow', 'red']}, 'EVI')
+    map_.addLayer(processed.median().clip(bbox), {'bands': ['evi'], 'min': 0, 'max': 1, 'palette': ['white', 'blue', 'green']}, 'EVI')
 
     # Center the map on the feature
     map_.centerObject(filtered_feature, zoom=10)
@@ -234,7 +234,7 @@ def landsat_evi_by_event_id(event_id, cloud_cover):
     # Create a map object to visualize the result
     map_ = geemap.Map()
     map_.addLayer(filtered_feature, {'color': 'red'}, f"MTBS Boundary: {event_id}")
-    map_.addLayer(processed.median().clip(bbox), {'bands': ['evi'], 'min': 0, 'max': 1, 'palette': ['blue', 'green', 'yellow', 'red']}, 'EVI')
+    map_.addLayer(processed.median().clip(bbox), {'bands': ['evi'], 'min': 0, 'max': 1, 'palette': ['white', 'blue', 'green']}, 'EVI')
 
     # Center the map on the feature
     map_.centerObject(filtered_feature, zoom=10)
@@ -293,7 +293,7 @@ def sentinel2_evi_by_event_id(event_id, cloud_cover):
     # Get the bounding box of the filtered feature
     bbox = filtered_feature.geometry()
 
-    # Load Sentinel-2 surface reflectance dataset
+    # Load Sentinel-2 surface reflectance dataset    
     sentinel2 = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED') \
         .filterBounds(bbox) \
         .filterDate(start_date, end_date) \
@@ -316,11 +316,15 @@ def sentinel2_evi_by_event_id(event_id, cloud_cover):
 
     # Apply the EVI calculation
     processed = sentinel2.map(calc_evi)
+    # Define visualization parameters
+   
+
+
 
     # Create a map object to visualize the result
     map_ = geemap.Map()
     map_.addLayer(filtered_feature, {'color': 'red'}, f"MTBS Boundary: {event_id}")
-    map_.addLayer(processed.median().clip(bbox), {'bands': ['evi'], 'min': 0, 'max': 1, 'palette': ['blue', 'green', 'yellow', 'red']}, 'EVI')
+    map_.addLayer(processed.median().clip(bbox), {'bands': ['evi'], 'min': 0, 'max': 1, 'palette': ['white', 'blue', 'green']}, 'EVI')
 
     # Center the map on the feature
     map_.centerObject(filtered_feature, zoom=10)

@@ -71,22 +71,22 @@ docker rmi bikal3/burn_image
 ## Folder Structure: SRC
 
 | src                    | Description
-| ---------------------  | --------------------------------------------- |
-| evi.api.ipynb          | Jupyter notebooks for EVI index analysis      |
-| fires_notebook.ipynb   | Python scripts for processing MTBS data.      |
-| mtbs_example.ipynb     | Jupyter notebooks for MTBS data by bbox       |
-| mtbs_source_coop.ipynb | Python for MTBS data by country               |
-| openmeteo_example.ipynb| Jupyter notebooks for weather data            |
+| ---------------------  | ------------------------------------------------------------------------ 
+| evi.api.ipynb          | Jupyter notebook for retrieve Landsat and Sentinel2 for display an Enhanced Vegetation Index
+| fires_notebook.ipynb   | Jupyter notebook to visualize MTBS and Existing Vegetation Cover         
+| mtbs_example.ipynb     | Jupyter notebook for retrieve MTBS by bbox from Google Earth Engine     
+| mtbs_source_coop.ipynb | Jupyter notebook for retrieve MTBS by state from Source coop, Dask,Docker
+| openmeteo_example.ipynb| Jupyter notebook for retrieve weather data from open meteo              
 
 
 ## Folder Structure: utils 
 
 | utils                  | Description 
-| ---------------------  | --------------------------------------------- | 
-| evi_utils.py           | Directory containing shapefiles and datasets. |
-| mtbs_utils.py          | Jupyter notebooks for data analysis.          |
-| openmeteo_utils.py     | Python scripts for processing data.           |
-| source_coop_utils.py   | List of dependencies to install.              |
+| ---------------------  | ---------------------------------------------------- | 
+| evi_utils.py           | List of extension to retrieve Landsat and Sentinel 2 |
+| mtbs_utils.py          | List of extension to retrieve mtbs                   |
+| openmeteo_utils.py     | List of extension to retrieve openmeteo              |
+| source_coop_utils.py   | List of extension to retrieve source coop            |
 
 
 ## File Structure: mtbs_utils 
@@ -107,3 +107,35 @@ docker rmi bikal3/burn_image
 |plot_burnedareabyseasonside| x=year and y=season                           |Function to plot BurnBndAcres by seasonality with side-by-side bars. 
 |plot_burnedareabyseasonhect| x=year and y=season                           |Function to plot BurnBndHectares by seasonality with side-by-side bars
 |displaymtbsbyeventstartdate|The Event ID to filter the dataset             |Display the MTBS burned area boundary for a specific Event ID and Event Date
+
+
+## File Structure: evi_utils 
+
+| evi_utils.py             |             Parameters                        |  Description 
+| ------------------------ | --------------------------------------------- | ------------------------
+|generate_evi              |bbox (ee.Geometry from MTBS);start_date:'YYYY-MM-DD' format; end_date:'YYYY-MM-DD' format                                                                     | Generate an Enhanced Vegetation Index (EVI) for a given bbox and time period
+|scaling_ls                |                                               |Function to scale Landsat bands
+|mask_clouds               |                                               |Function to mask clouds
+|calc_vis_ls               |                                               |Function to calculate NDVI and EVI
+|landsat8_evi_event_id_custom_date|event_id, start_date, end_date, cloud_cover|Generate an Enhanced Vegetation Index (EVI) for a given Event ID and time period
+|landsat_evi_by_event_id   | event_id (str): The Event ID to filter the MTBS dataset; cloud_cover:80                                                             |Generate an Enhanced Vegetation Index (EVI) for a given Event ID and a time period 10 days before and 10 days after the event's Ig_Date.
+|sentinel2_evi_by_event_id |event_id (str): The Event ID to filter the MTBS dataset; cloud_cover:20 |Generate an Enhanced Vegetation Index (EVI) using Sentinel-2 data for a given Event ID and a time period 10 days before and 10 days after the event's Ig_Date.
+
+
+## File Structure: openmeteo_utils 
+
+| openmeteo_utils.py        |             Parameters                        |  Description 
+| ------------------------- | --------------------------------------------- | ------------------------
+|fetch_weather_data         |latitude, longitude, start_date, end_date, daily_variables, timezone="GMT" | Function to setup the Open-Meteo API client
+
+
+## File Structure: source_coop_utils 
+
+| source_coop_utils.py      |             Parameters                        |  Description 
+| ------------------------- | --------------------------------------------- | ------------------------
+|initialize_dask_cluster    |cluster_kwargs                                 |Initializes a Dask LocalCluster and Client, and prints the dashboard link
+|get_s3_keys                |bucket_name, prefix, client                    |Fetches all the S3 keys associated with a specified prefix.
+|get_usgs_data              |file_name, s3_client                           | 
+|get_mtbs_shp               |file_name, s3_client                           |
+
+

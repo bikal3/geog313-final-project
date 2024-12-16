@@ -74,8 +74,8 @@ docker rmi bikal3/burn_image
 | ---------------------  | ------------------------------------------------------------------------ 
 | evi.api.ipynb          | Jupyter notebook for retrieve Landsat and Sentinel2 for display an Enhanced Vegetation Index
 | fires_notebook.ipynb   | Jupyter notebook to visualize MTBS and Existing Vegetation Cover         
-| mtbs_example.ipynb     | Jupyter notebook for retrieve MTBS by bbox from Google Earth Engine     
-| mtbs_source_coop.ipynb | Jupyter notebook for retrieve MTBS by state from Source coop, Dask,Docker
+| mtbs_example.ipynb     | Jupyter notebook for retrieve MTBS by bbox from Google Earth Engine and geemap      
+| mtbs_source_coop.ipynb | Jupyter notebook for retrieve MTBS by state from Source coop,Dask,Docker
 | openmeteo_example.ipynb| Jupyter notebook for retrieve weather data from open meteo              
 
 

@@ -68,8 +68,18 @@ docker rm burn_container
 docker rmi bikal3/burn_image:1.0.1
 ```
 
-## Folder Structure: SRC
+## User Recommendation 
 
+| src                     | Objective                                                                                   |
+| ----------------------- | -------------------------------------------------------------------------------------------- |
+| fires_notebook.ipynb    | Explore and visualize MTBS burned boundaries, burned severity, and Existing Vegetation Cover from Landfire                             
+| evi.api.ipynb           | Create a list of event_id to assess Landsat and Sentinel2 for display an Enhanced Vegetation Index 
+| mtbs_example.ipynb      | Retrieve seasonality of fire based on bbox, start date and end date. 
+| openmeteo_example.ipynb | Retrieve weather conditions based on event_id
+| mtbs_source_coop.ipynb  | Generate a US map of quantity of wildfire from MTBS 1985-2022
+
+
+## Folder Structure: SRC
 | src                     | Description                                                                                  |
 | ----------------------- | -------------------------------------------------------------------------------------------- |
 | evi.api.ipynb           | Jupyter notebook for retrieve Landsat and Sentinel2 for display an Enhanced Vegetation Index |

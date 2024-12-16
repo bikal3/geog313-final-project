@@ -130,5 +130,5 @@ docker rmi bikal3/burn_image:1.0.1
 | ----------------------- | --------------------------- | ------------------------------------------------------------------------- |
 | initialize_dask_cluster | cluster_kwargs              | Initializes a Dask LocalCluster and Client, and prints the dashboard link |
 | get_s3_keys             | bucket_name, prefix, client | Fetches all the S3 keys associated with a specified prefix.               |
-| get_usgs_data           | file_name, s3_client        |
-| get_mtbs_shp            | file_name, s3_client        |
+| get_usgs_data           | file_name, s3_client        | Extract parquet 
+| get_mtbs_shp            | file_name, s3_client        | Extract shapefile or any other file if you write the extension of that file 

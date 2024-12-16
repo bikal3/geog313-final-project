@@ -16,13 +16,13 @@ Ensure that you have the following installed on your machine:
 It's recommended to pull the Docker image from Dockerhub.
 
 ```bash
-docker pull bikal3/burn_image:1.0.1
+docker pull bikal3/wildfire_image:1.0.0
 ```
 
 Otherwise, if you prefer, you can build your own image go to folder geog313-final-project
 
 ```bash
-docker build -t bikal3/burn_image:1.0.1 .
+docker build -t bikal3/wildfire_image:1.0.0 .
 ```
 
 ### 2. Run the Docker Container
@@ -30,7 +30,7 @@ docker build -t bikal3/burn_image:1.0.1 .
 Go to folder geog313-final-project and run the container using the following command:
 
 ```bash
-docker run -p 8888:8888 -p 8787:8787 -v $(pwd):/home/jupyteruser --name burn_container bikal3/burn_image:1.0.1
+docker run -p 8888:8888 -p 8787:8787 -v $(pwd):/home/jupyteruser --name wildfire_container bikal3/wildfire_image:1.0.0
 ```
 
 Port `8787` is used by Dask Dashboard.
@@ -48,7 +48,7 @@ After logging into JupyterLab, you should see the file name with ipynb extention
 To stop the running container, execute:
 
 ```bash
-docker stop burn_container
+docker stop wildfire_container
 ```
 
 ### Restarting the Container
@@ -56,7 +56,7 @@ docker stop burn_container
 If you want to restart the container later, you can use:
 
 ```bash
-docker start -i burn_container
+docker start -i wildfire_container
 ```
 
 ### Removing the Container and Image
@@ -64,22 +64,22 @@ docker start -i burn_container
 To remove the container and image after you are done:
 
 ```bash
-docker rm burn_container
-docker rmi bikal3/burn_image:1.0.1
+docker rm wildfire_container
+docker rmi bikal3/wildfire_image:1.0.0
 ```
 
-## User Recommendation 
+## User Recommendation
 
-| src                     | Objective                                                                                   |
-| ----------------------- | -------------------------------------------------------------------------------------------- |
-| fires_notebook.ipynb    | Explore and visualize MTBS burned boundaries, burned severity, and Existing Vegetation Cover from Landfire                             
-| evi.api.ipynb           | Create a list of event_id to assess Landsat and Sentinel2 for display an Enhanced Vegetation Index 
-| mtbs_example.ipynb      | Retrieve seasonality of fire based on bbox, start date and end date. 
-| openmeteo_example.ipynb | Retrieve weather conditions based on event_id
-| mtbs_source_coop.ipynb  | Generate a US map of quantity of wildfire from MTBS 1985-2022
-
+| src                     | Objective                                                                                                  |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------- |
+| fires_notebook.ipynb    | Explore and visualize MTBS burned boundaries, burned severity, and Existing Vegetation Cover from Landfire |
+| evi.api.ipynb           | Create a list of event_id to assess Landsat and Sentinel2 for display an Enhanced Vegetation Index         |
+| mtbs_example.ipynb      | Retrieve seasonality of fire based on bbox, start date and end date.                                       |
+| openmeteo_example.ipynb | Retrieve weather conditions based on event_id                                                              |
+| mtbs_source_coop.ipynb  | Generate a US map of quantity of wildfire from MTBS 1985-2022                                              |
 
 ## Folder Structure: SRC
+
 | src                     | Description                                                                                  |
 | ----------------------- | -------------------------------------------------------------------------------------------- |
 | evi.api.ipynb           | Jupyter notebook for retrieve Landsat and Sentinel2 for display an Enhanced Vegetation Index |
@@ -136,9 +136,9 @@ docker rmi bikal3/burn_image:1.0.1
 
 ## File Structure: source_coop_utils
 
-| source_coop_utils.py    | Parameters                  | Description                                                               |
-| ----------------------- | --------------------------- | ------------------------------------------------------------------------- |
-| initialize_dask_cluster | cluster_kwargs              | Initializes a Dask LocalCluster and Client, and prints the dashboard link |
-| get_s3_keys             | bucket_name, prefix, client | Fetches all the S3 keys associated with a specified prefix.               |
-| get_usgs_data           | file_name, s3_client        | Extract parquet 
-| get_mtbs_shp            | file_name, s3_client        | Extract shapefile or any other file if you write the extension of that file 
+| source_coop_utils.py    | Parameters                  | Description                                                                 |
+| ----------------------- | --------------------------- | --------------------------------------------------------------------------- |
+| initialize_dask_cluster | cluster_kwargs              | Initializes a Dask LocalCluster and Client, and prints the dashboard link   |
+| get_s3_keys             | bucket_name, prefix, client | Fetches all the S3 keys associated with a specified prefix.                 |
+| get_usgs_data           | file_name, s3_client        | Extract parquet                                                             |
+| get_mtbs_shp            | file_name, s3_client        | Extract shapefile or any other file if you write the extension of that file |

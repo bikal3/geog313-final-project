@@ -5,8 +5,8 @@ FROM continuumio/miniconda3:24.7.1-0
 COPY environment.yml /home/environment.yml
 
 # Activate the Conda environment
-RUN echo "conda activate burn-env" >> ~/.bashrc
-ENV PATH="$PATH:/opt/conda/envs/burn-env/bin"
+RUN echo "conda activate envburn" >> ~/.bashrc
+ENV PATH="$PATH:/opt/conda/envs/envburn/bin"
 
 # Create a Conda environment with JupyterLab installed
 RUN conda env create -f /home/environment.yml
@@ -23,3 +23,6 @@ EXPOSE 8888
 
 # Expose the Dask Dashboard port
 EXPOSE 8787
+
+# Start JupyterLab
+CMD ["jupyter", "lab", "--ip=0.0.0.0"]

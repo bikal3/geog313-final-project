@@ -3,7 +3,7 @@ import dask_geopandas as dg
 import geopandas as gpd
 import boto3
 import leafmap
-
+from botocore.exceptions import ClientError
 from dask.distributed import Client, LocalCluster
 
 #-------------------------------------------------------------------------------------------------------------------
@@ -56,7 +56,7 @@ def get_s3_keys(bucket_name, prefix, client):
 
     return keys  
 #-------------------------------------------------------------------------------------------------------------------
-def get_usgs_data(file_name, s3_client):
+def get_usgs_data(file_name, s3_client,local_path):
 
     bucket_name = 'cboettig'
     prefix = "fire/"
@@ -64,14 +64,14 @@ def get_usgs_data(file_name, s3_client):
     keys = get_s3_keys(bucket_name, file_prefix, s3_client)
 
     for key in keys:
-        local_fname = f"./data/{key.split("/")[-1]}"
+        local_fname = f"{local_path}/{key.split("/")[-1]}"
         if not os.path.exists(local_fname):
             print(f"File not found locally. Downloading from s3...")
             
             try:
                 s3_client.download_file(Bucket = bucket_name,
                                         Key = key,
-                                        Filename = f"./data/{key.split("/")[-1]}"
+                                        Filename = f"{local_path}/{key.split("/")[-1]}"
                                        )
                 print("Download complete.")
             except:
@@ -79,11 +79,11 @@ def get_usgs_data(file_name, s3_client):
         else:
             print("File already exists locally. No download needed.")
 
-    usgs_ddf = dg.read_parquet(f"./data/{file_name}*.parquet", gather_spatial_partitions=False)
+    usgs_ddf = dg.read_parquet(f"{local_path}/{file_name}*.parquet", gather_spatial_partitions=False)
 
     return usgs_ddf
 #-------------------------------------------------------------------------------------------------------------------
-def get_mtbs_shp(file_name, s3_client):
+def get_mtbs_shp(file_name, s3_client,local_path):
 
     bucket_name = 'cboettig'
     prefix = "fire/USGS-MTBS/"
@@ -91,22 +91,27 @@ def get_mtbs_shp(file_name, s3_client):
     keys = get_s3_keys(bucket_name, file_prefix, s3_client)
 
     for key in keys:
-        local_fname = f"./data/{key.split("/")[-1]}"
+        local_fname = f"{local_path}/{key.split("/")[-1]}"
         if not os.path.exists(local_fname):
             print(f"File not found locally. Downloading from s3...")
             
             try:
                 s3_client.download_file(Bucket = bucket_name,
                                         Key = key,
-                                        Filename = f"./data/{key.split("/")[-1]}"
+                                        Filename = f"{local_path}/{key.split("/")[-1]}"
                                        )
                 print("Download complete.")
-            except:
-                print("An error occurred. Download failed")
+            except ClientError as error:
+                if error.response["Error"]["Code"] == "404":
+                    print("The specified key does not exist in the bucket.")
+                else:
+                    print(f"An error occurred: {error}")
+            except Exception as error:
+                print(f"An unexpected error occurred: {error}")
         else:
             print("File already exists locally. No download needed.")
 
-    mtbs_shp_ddf = dg.read_file(f"./data/{file_name}",npartitions=4)
+    mtbs_shp_ddf = dg.read_file(f"{local_path}/{file_name}.shp",npartitions=4)
 
     return mtbs_shp_ddf
 #-------------------------------------------------------------------------------------------------------------------

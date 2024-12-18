@@ -2,6 +2,7 @@ import os
 import dask_geopandas as dg
 import geopandas as gpd
 import boto3
+import leafmap
 
 from dask.distributed import Client, LocalCluster
 
@@ -108,4 +109,98 @@ def get_mtbs_shp(file_name, s3_client):
     mtbs_shp_ddf = dg.read_file(f"./data/{file_name}",npartitions=4)
 
     return mtbs_shp_ddf
+#-------------------------------------------------------------------------------------------------------------------
+
+def create_wildfire_severity_map(mtbs_shp_ddf):
+    """
+    Generates a wildfire severity map for the United States based on MTBS data.
+
+    Parameters:
+    - mtbs_shp_ddf (Dask GeoDataFrame): Dask GeoDataFrame containing MTBS wildfire perimeter data.
+
+    Returns:
+    - leafmap.Map: Interactive map showing wildfire severity by state.
+    """
+    
+    # Filter the data for Wildfire incidents
+    wildfire_ddf = mtbs_shp_ddf[mtbs_shp_ddf['Incid_Type'] == 'Wildfire']
+
+    # Extract state abbreviation from the 'Event_ID' (first two characters)
+    wildfire_ddf['State'] = wildfire_ddf['Event_ID'].str[:2]
+
+    # Group by 'State' and count the number of wildfires
+    wildfires_by_state = wildfire_ddf.groupby('State').size().compute()
+
+    # Convert to a DataFrame for merging
+    wildfires_by_state_df = wildfires_by_state.reset_index()
+    wildfires_by_state_df.columns = ['State', 'Wildfire Count']
+
+    # Categorize severity levels
+    def classify_severity(count):
+        if count < 50:
+            return 'Low'
+        elif 50 <= count < 200:
+            return 'Medium'
+        else:
+            return 'High'
+
+    wildfires_by_state_df['Severity'] = wildfires_by_state_df['Wildfire Count'].apply(classify_severity)
+
+    # Load US states shapefile from Natural Earth
+    us_states = gpd.read_file("https://www2.census.gov/geo/tiger/GENZ2021/shp/cb_2021_us_state_20m.zip")
+
+    # Create a column for state abbreviations in the shapefile
+    state_abbrev_mapping = {
+        'Alaska': 'AK', 'Hawaii': 'HI', 'Alabama': 'AL', 'Arizona': 'AZ', 'Arkansas': 'AR',
+        'California': 'CA', 'Colorado': 'CO', 'Connecticut': 'CT', 'Delaware': 'DE', 'Florida': 'FL',
+        'Georgia': 'GA', 'Idaho': 'ID', 'Illinois': 'IL', 'Indiana': 'IN', 'Iowa': 'IA', 'Kansas': 'KS',
+        'Kentucky': 'KY', 'Louisiana': 'LA', 'Maine': 'ME', 'Maryland': 'MD', 'Massachusetts': 'MA',
+        'Michigan': 'MI', 'Minnesota': 'MN', 'Mississippi': 'MS', 'Missouri': 'MO', 'Montana': 'MT',
+        'Nebraska': 'NE', 'Nevada': 'NV', 'New Hampshire': 'NH', 'New Jersey': 'NJ', 'New Mexico': 'NM',
+        'New York': 'NY', 'North Carolina': 'NC', 'North Dakota': 'ND', 'Ohio': 'OH', 'Oklahoma': 'OK',
+        'Oregon': 'OR', 'Pennsylvania': 'PA', 'Rhode Island': 'RI', 'South Carolina': 'SC',
+        'South Dakota': 'SD', 'Tennessee': 'TN', 'Texas': 'TX', 'Utah': 'UT', 'Vermont': 'VT',
+        'Virginia': 'VA', 'Washington': 'WA', 'West Virginia': 'WV', 'Wisconsin': 'WI', 'Wyoming': 'WY'
+    }
+    us_states['State'] = us_states['NAME'].map(state_abbrev_mapping)
+
+    # Merge the wildfire counts with the US states shapefile
+    us_states = us_states.merge(wildfires_by_state_df, on='State', how='left')
+    us_states['Wildfire Count'] = us_states['Wildfire Count'].fillna(0)
+    us_states['Severity'] = us_states['Severity'].fillna('Low')
+
+    # Define a style callback function for dynamic styling based on severity
+    def style_callback(feature):
+        severity = feature['properties']['Severity']
+        color_map = {
+            'Low': '#ffffb2',
+            'Medium': '#fd8d3c',
+            'High': '#bd0026'
+        }
+        return {
+            "fillColor": color_map.get(severity, '#ffffb2'),
+            "color": "black",
+            "weight": 1,
+            "fillOpacity": 0.7
+        }
+
+    # Create a map using leafmap
+    m = leafmap.Map(center=[39.8283, -98.5795], zoom=4)
+    
+    # Add the US states layer with wildfire counts
+    m.add_gdf(
+        us_states,
+        layer_name='Wildfires by State',
+        info_mode='on_click',
+        style_callback=style_callback,
+    )
+
+    # Add a legend
+    m.add_legend(
+        title="Wildfire Severity by State",
+        labels=['Low', 'Medium', 'High'],
+        colors=['#ffffb2', '#fd8d3c', '#bd0026']
+    )
+
+    return m
 #-------------------------------------------------------------------------------------------------------------------

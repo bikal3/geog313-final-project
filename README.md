@@ -1,8 +1,8 @@
-# Assessing the climate factors and vegetation conditions influencing wildfires in California
+# Assessing climate factors and vegetation conditions influencing the wildfires in California
 
 This guide will walk you through running a Docker container using the provided Dockerfile, setting up the Conda environment, and executing these file Jupyter notebook.
 
-## Prerequisites
+## Pre-requisites
 
 Ensure that you have the following installed on your machine:
 
@@ -69,6 +69,7 @@ docker rmi bikal3/wildfire_image:1.0.0
 ```
 
 ## User Recommendation
+Go through each notebook listed here to generate the required outcomes. For more information about the project's purpose, refer to the Report linked above. 
 
 | src                     | Objective                                                                                                  |
 | ----------------------- | ---------------------------------------------------------------------------------------------------------- |

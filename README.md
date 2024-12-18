@@ -73,10 +73,10 @@ docker rmi bikal3/wildfire_image:1.0.0
 | src                     | Objective                                                                                                  |
 | ----------------------- | ---------------------------------------------------------------------------------------------------------- |
 | fires_notebook.ipynb    | Explore and visualize MTBS burned boundaries, burned severity, and Existing Vegetation Cover from Landfire |
-| evi.api.ipynb           | Create a list of event_id to assess Landsat and Sentinel2 for display an Enhanced Vegetation Index         |
-| mtbs_example.ipynb      | Retrieve seasonality of fire based on bbox, start date and end date.                                       |
-| openmeteo_example.ipynb | Retrieve weather conditions based on event_id                                                              |
-| mtbs_source_coop.ipynb  | Generate a US map of quantity of wildfire from MTBS 1985-2022                                              |
+| evi.api.ipynb           | Generate a map using Landsat and Sentinel2 for display an Enhanced Vegetation Index         |
+| mtbs_example.ipynb      | Retrieve seasonality of wildfire based on bbox, start date and end date.                                       |
+| openmeteo_example.ipynb | Retrieve weather conditions based on event_id giving a period of analysis and selected variables                                                              |
+| mtbs_source_coop.ipynb  | Create a wildfire severity map using the MTBS shapefile data 1982-2022                                              |
 
 ## Folder Structure: SRC
 
@@ -86,7 +86,7 @@ docker rmi bikal3/wildfire_image:1.0.0
 | fires_notebook.ipynb    | Jupyter notebook to visualize MTBS and Existing Vegetation Cover                             |
 | mtbs_example.ipynb      | Jupyter notebook for retrieve MTBS by bbox from Google Earth Engine and geemap               |
 | mtbs_source_coop.ipynb  | Jupyter notebook for retrieve MTBS by state from Source coop,Dask,Docker                     |
-| openmeteo_example.ipynb | Jupyter notebook for retrieve weather data from open meteo                                   |
+| openmeteo_example.ipynb | Jupyter notebook for retrieve weather data from open meteo 
 
 ## Folder Structure: utils
 

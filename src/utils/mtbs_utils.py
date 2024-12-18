@@ -40,6 +40,30 @@ def get_month_start_end(event_date):
     
     return start_date, end_date
 #-------------------------------------------------------------------------------------------------------------------
+from datetime import datetime, timedelta
+
+def get_event_start_end(event_date):
+    """
+    Given an event date, return the start date as 10 days before the event date 
+    and the end date as 10 days after the event date.
+
+    Parameters:
+    - event_date (str): Date string in 'YYYY-MM-DD HH:MM:SS' format.
+
+    Returns:
+    - tuple: (start_date, end_date) in 'YYYY-MM-DD' format.
+    """
+    # Convert event_date to a datetime object
+    event_date_dt = datetime.strptime(event_date, '%Y-%m-%d %H:%M:%S')
+    
+    # Calculate the start date as 10 days before the event date
+    start_date = (event_date_dt - timedelta(days=10)).strftime('%Y-%m-%d')
+    
+    # Calculate the end date as 10 days after the event date
+    end_date = (event_date_dt + timedelta(days=10)).strftime('%Y-%m-%d')
+    
+    return start_date, end_date
+#-------------------------------------------------------------------------------------------------------------------
 def datetime_to_unix(date_str):
     """
     Convert a date string in 'YYYY-MM-DD' format to Unix timestamp in milliseconds.
